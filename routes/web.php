@@ -7,6 +7,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/login', [AuthController::class, 'loginForm'])->name('login.form');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+
+
 Route::get('/courses', [courseController::class, 'index'])->name('courses.index');
 Route::get('/courses/create', [courseController::class, 'create'])->name('courses.create');
 Route::post('/courses', [courseController::class, 'store'])->name('courses.store');

@@ -26,7 +26,7 @@
                 <li><a href="index.php">About</a></li>
                 <li><a href="about.html">Rate</a></li>
                 <li><a href="contact.html">Features</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="{{ route('login') }}">Login</a></li>
                 <li><a href="register.html">Register</a></li>
             </ul>
         </div>
@@ -47,7 +47,7 @@
                         while helping you create valuable connections. Here’s how <b class="text-black">Unione</b> can
                         revolutionize your career journey.
                     </p>
-                    <a href="login.html">
+                    <a href="{{ route('courses.create') }}">
                         <button class="px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-blue-600">
                             Get Started
                         </button>

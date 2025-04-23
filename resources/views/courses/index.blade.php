@@ -20,6 +20,7 @@
     </style>
 </head>
 
+
 <body class="bg-white">
     <!-- Header -->
     <header>
@@ -149,8 +150,6 @@
                 userDropdown.classList.add('hidden');
             }
         });
-    
-    
     </script>
     
 
