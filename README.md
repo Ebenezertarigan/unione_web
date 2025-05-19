@@ -1,7 +1,6 @@
 # Unione
 
-Aplikasi ini adalah informasi lowongan pekerjaan dimana user bisa melihat 
-
+Aplikasi untuk bermedia sosial, membagikan profil,menyalurkan referensi,forum diskusi, dan memberikan ruang untuk membagikan keterampilan pengalaman pengguna. dari aplikasi ini dapat membantu pengguna untuk berinteraksi dan berkolaborasi serta menambah relasi dengan bergabung bersama komunitas 
 ---
 
 ## ✨ Fitur Utama
