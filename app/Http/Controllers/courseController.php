@@ -6,13 +6,21 @@ use Illuminate\Support\Facades\Session;
 
 class courseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $courses = session('courses', []); // ambil dari session
-
+        $courses = session('courses', []);
+    
+        $search = $request->query('search');
+    
+        if ($search) {
+            $courses = array_filter($courses, function ($course) use ($search) {
+                return stripos($course['title'], $search) !== false ||
+                       stripos($course['description'], $search) !== false;
+            });
+        }
+    
         return view('courses.index', compact('courses'));
     }
-
     public function create()
     {
         return view('courses.create');
@@ -32,14 +40,14 @@ class courseController extends Controller
             'course_video' => null,
         ];
 
-        // Simpan thumbnail jika ada
+        // Simpan thumbnail 
         if ($request->hasFile('photo')) {
             $filename = uniqid('photo_') . '.' . $request->file('photo')->getClientOriginalExtension();
             $request->file('photo')->move(public_path('img'), $filename);
             $newCourse['thumbnail'] = $filename;
         }
 
-        // Simpan video jika ada
+        // Simpan video 
         if ($request->hasFile('video')) {
             $filename = uniqid('video_') . '.' . $request->file('video')->getClientOriginalExtension();
             $request->file('video')->move(public_path('videos'), $filename);
