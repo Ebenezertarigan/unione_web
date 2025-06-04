@@ -26,8 +26,8 @@
                 <li><a href="index.php">About</a></li>
                 <li><a href="about.html">Rate</a></li>
                 <li><a href="contact.html">Features</a></li>
-                <li><a href="{{ route('login') }}">Login</a></li>
-                <li><a href="register.html">Register</a></li>
+                <li><a href="{{ route('login.form') }}">Login</a></li>
+                <li><a href="{{ route('register.form') }}">Register</a></li>
             </ul>
         </div>
     </div>
