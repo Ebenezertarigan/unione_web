@@ -16,18 +16,18 @@
     <div class="navbar bg-black shadow-md">
         <div class="flex-1">
             <!-- Logo -->
-            <a href="#" class="btn btn-ghost normal-case text-xl flex items-center gap-2 place-content-center">
-                <img src="images\logoputihtest.png" alt="Logo Website" width="100" />
+            <a href="{{ route('welcome') }}" class="btn btn-ghost normal-case text-xl flex items-center gap-2 place-content-center">
+                <img src="{{ asset('images/logoputihtest.png') }}" alt="Logo Website" width="100" />
             </a>
         </div>
         <div class="flex-none">
             <!-- Navigation Links -->
             <ul class="menu menu-horizontal px-1 hidden md:flex">
-                <li><a href="index.php">About</a></li>
-                <li><a href="about.html">Rate</a></li>
-                <li><a href="contact.html">Features</a></li>
-                <li><a href="{{ route('login.form') }}">Login</a></li>
-                <li><a href="{{ route('register.form') }}">Register</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#rate">Rate</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="{{ route('login') }}">Login</a></li>
+                <li><a href="{{ route('register') }}">Register</a></li>
             </ul>
         </div>
     </div>

@@ -1,115 +1,119 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Course;
 
-class courseController extends Controller
+class CourseController extends Controller
 {
-    public function index(Request $request)
+    public function __construct()
     {
-        $courses = session('courses', []);
-    
-        $search = $request->query('search');
-    
-        if ($search) {
-            $courses = array_filter($courses, function ($course) use ($search) {
-                return stripos($course['title'], $search) !== false ||
-                       stripos($course['description'], $search) !== false;
-            });
-        }
-    
-        return view('courses.index', compact('courses'));
+        $this->middleware('auth');
     }
-    public function create()
+
+    public function index()
     {
-        return view('courses.create');
+        $courses = Course::with('details')->get();
+        return view('courses.index', compact('courses'));
     }
 
     public function store(Request $request)
     {
-        $courses = session('courses', []);
+        // Validasi input dari form
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'nullable|string|max:100',
+            'status' => 'required|in:active,inactive',
+            'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg|max:102400'
+        ]);
 
-        $newCourse = [
-            'id' => uniqid(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'category' => $request->category,
-            'status' => $request->status,
-            'thumbnail' => null,
-            'course_video' => null,
+        // Persiapan data untuk disimpan
+        $courseData = [
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'category' => $validated['category'] ?? null,
+            'status' => $validated['status'],
+            'user_id' => Auth::user()->user_id // pastikan kolom 'user_id' ada di tabel
         ];
 
-        // Simpan thumbnail 
-        if ($request->hasFile('photo')) {
-            $filename = uniqid('photo_') . '.' . $request->file('photo')->getClientOriginalExtension();
-            $request->file('photo')->move(public_path('img'), $filename);
-            $newCourse['thumbnail'] = $filename;
-        }
-
-        // Simpan video 
+        // Jika ada file video, simpan ke folder public/videos
         if ($request->hasFile('video')) {
-            $filename = uniqid('video_') . '.' . $request->file('video')->getClientOriginalExtension();
-            $request->file('video')->move(public_path('videos'), $filename);
-            $newCourse['course_video'] = $filename;
+            $file = $request->file('video');
+            $filename = uniqid('video_') . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('videos'), $filename);
+            $courseData['video'] = $filename;
         }
 
-        
-        $courses[] = $newCourse;
+        // Simpan course dan simpan instansinya ke variabel
+        $course = Course::create($courseData);
 
-        session(['courses' => $courses]); // simpan ke session
-
-        return redirect()->route('courses.index')->with('success', 'Course berhasil ditambahkan!');
+        // Redirect ke halaman show dengan parameter id course
+        return redirect()->route('courses.show', ['course_id' => $course->course_id]) // pastikan key-nya 'course_id' sesuai DB
+                        ->with('success', 'Course created successfully!');
     }
 
-    public function show($id)
+    public function show($course_id)
     {
-        $courses = session('courses', []);
-    
-        $course = collect($courses)->firstWhere('id', $id);
-    
-        if (!$course) {
-            abort(404, 'Course not found');
-        }
-    
+        $course = Course::findOrFail($course_id);
         return view('courses.show', compact('course'));
     }
-
-    public function edit($id)
+    public function edit($course_id)
     {
-        $courses = session('courses', []);
-        $course = collect($courses)->firstWhere('id', $id);
-
-        return view('courses.edit', ['course' => $course]);
+        $course = Course::findOrFail($course_id);
+        return view('courses.edit', compact('course'));
     }
 
-    public function destroy($id)
-    {
-        $courses = session('courses', []);
-        $courses = array_filter($courses, fn($course) => $course['id'] !== $id);
-        session(['courses' => $courses]);
 
-        return redirect()->route('courses.index')->with('success', 'Course dihapus.');
-    }
-
-    public function update(Request $request, $id)
+    public function update(Request $request, $course_id)
     {
-        $courses = session('courses', []);
-        
-        foreach ($courses as &$course) {
-            if ($course['id'] === $id) {
-                $course['title'] = $request->title;
-                $course['description'] = $request->description;
-                // Tambahkan update kategori/status jika perlu
-                break;
+        $course = Course::findOrFail($course_id);
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'category' => 'nullable|string|max:100',
+            'status' => 'required|in:active,inactive',
+            'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg|max:102400'
+        ]);
+
+        $updateData = collect($validated)->filter()->all();
+
+        if ($request->hasFile('video')) {
+            if ($course->video) {
+                @unlink(public_path('videos/' . $course->video));
             }
+            
+            $file = $request->file('video');
+            $filename = uniqid('video_') . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('videos'), $filename);
+            $updateData['video'] = $filename;
         }
-    
-        session(['courses' => $courses]);
-    
-        return redirect()->route('courses.index')->with('success', 'Course berhasil diupdate!');
-    }
-    
 
+        $course->update($updateData);
+
+        return redirect()->route('courses.show', ['course_id' => $course_id])
+                        ->with('success', 'Course updated successfully');
+    }
+
+    public function destroy($course_id)
+    {
+        $course = Course::findOrFail($course_id);
+        
+        if ($course->video) {
+            @unlink(public_path('videos/' . $course->video));
+        }
+        
+        $course->delete();
+
+        return redirect()->route('courses.index')
+                        ->with('success', 'Course deleted successfully');
+    }
+
+    public function create()
+    {
+        return view('courses.create');
+    }
 }

@@ -1,28 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unione</title>
+    <title>Unione - Professional Learning Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        /* Perbaikan z-index untuk dropdown */
-        #user-dropdown {
-            z-index: 1000;
-        }
-
-        /* Pastikan carousel berada di belakang dropdown */
-        #carousel {
-            z-index: 1;
-        }
-    </style>
 </head>
 
-
-<body class="bg-white">
-    <!-- Header -->
+<body class="bg-[#F3F2EF]">
+        <!-- Header -->
     <header>
         <nav class="fixed top-0 w-full z-50 flex items-center justify-between p-2 bg-black">
             <!-- Logo -->
@@ -44,7 +31,7 @@
             <!-- Navigation Links -->
             <ul class="flex space-x-4 mx-4 text-lg">
                 <li>
-                    <a href="course-user.html"
+                    <a href="{{ route('courses.index') }}"
                         class="text-gray-400 relative group hover:text-gray-500 border-b-2 border-transparent group-active:border-b-2 group-active:border-white"
                         id="course">
                         Course
@@ -155,70 +142,58 @@
 
 
     <!-- Navbar End -->
-
-    <!-- Carousel Section -->
-    <div class="relative w-full h-[384px] overflow-hidden">
-        <div class="flex transition-transform duration-700 ease-in-out" id="carousel">
-            <div class="flex-shrink-0 w-full">
-                <img src="images/header-kursus2.jpg" alt="Slide 3" class="w-full h-auto">
-            </div>
-        </div>
-    </div>
-
-    <div class="container mx-auto p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-semibold">Courses</h1>
-            <a href="{{ route('courses.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Add New Course
-            </a>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @forelse($courses as $course)
-            <div class="max-w-xs rounded overflow-hidden shadow-md bg-white">
-                <img class="w-full h-32 object-cover"
-                    src="{{ asset('photos/' . ($course->thumbnail ?? 'default.jpg')) }}"
-                    alt="Course Thumbnail">
-                <div class="px-4 py-2">
-                    <h2 class="font-bold text-lg mb-2">{{ $course->title }}</h2>
-                    <div class="flex items-center space-x-2">
-                        <img class="w-8 h-8 rounded-full object-cover"
-                            src="{{ asset('photos/header-kursus2.jpg') }}" alt="User Avatar">
-                        <h3 class="font-bold text-sm">{{ $course->user->name ?? 'Instructor' }}</h3>
+    <!-- Main Content -->
+    <main class="pt-16 bg-[#F3F2EF]">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Left Sidebar - Profile Card -->
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="h-20 bg-blue-600 rounded-t-lg"></div>
+                        <div class="px-4 pb-4">
+                            <div class="-mt-10 mb-4">
+                                <img src="{{ Auth::user()->foto ? asset('photos/profiles/'.Auth::user()->foto) : asset('images/default-avatar.png') }}"
+                                     class="w-20 h-20 rounded-full border-4 border-white object-cover mx-auto" 
+                                     alt="{{ Auth::user()->name }}">
+                            </div>
+                            <h2 class="text-xl font-bold text-center mb-1">{{ Auth::user()->name }}</h2>
+                            <p class="text-gray-600 text-sm text-center">{{ Auth::user()->role }}</p>
+                        </div>
                     </div>
-                    <p class="text-gray-600 text-sm mt-1">{{ $course->description }}</p>
                 </div>
-                <div class="px-4 pt-2 pb-1 flex justify-between items-center">
-                    <a href="{{ route('courses.show', ['course_id' => $course->course_id]) }}"
-                        class="bg-blue-500 text-white text-sm px-3 py-1 rounded hover:bg-blue-700">
-                        Cek sekarang
-                    </a>
 
-                    <div class="flex space-x-4">
-                        <a href="{{ route('courses.edit', ['course_id' => $course->course_id]) }}"
-                            class="text-blue-500 text-sm hover:underline">Edit</a>
-                        <form action="{{ route('courses.destroy', ['course_id' => $course->course_id]) }}" method="POST"
-                            onsubmit="return confirm('Yakin ingin menghapus course ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 text-sm hover:underline pb-1">Delete</button>
-                        </form>
+                <!-- Main Feed -->
+                <div class="md:col-span-2">
+                    <!-- Course Recommendations -->
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-xl font-bold mb-4">Recommended Courses</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @foreach($recommendedCourses ?? [] as $course)
+                            <div class="border rounded-lg p-4">
+                                <h3 class="font-semibold">{{ $course->title }}</h3>
+                                <p class="text-sm text-gray-600 mt-1">{{ $course->description }}</p>
+                                <a href="{{ route('courses.show', $course->course_id) }}" 
+                                   class="text-blue-600 text-sm font-semibold mt-2 inline-block">
+                                    Learn More
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
-            @empty
-            <p class="text-gray-500 text-sm col-span-4 text-center">Belum ada course yang ditambahkan.</p>
-            @endforelse
         </div>
-    </div>
-    </div>
-    </div>
+    </main>
 
-    <footer>
-        <p align="center">Copyright @2025</p>
-        <p align="center">Unione</p>
-    </footer>
+    <style>
+        .nav-link {
+            @apply flex flex-col items-center text-gray-500 hover:text-black;
+        }
+        .dropdown-item {
+            @apply flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full;
+        }
+    </style>
 
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>
-
 </html>

@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
 
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = 'user_id'; // Changed from 'id' to 'user_id'
 
     /**
      * 
@@ -23,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'foto'
+        'foto',
     ];
 
     /**
@@ -42,7 +41,8 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime'
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     /**
@@ -53,4 +53,14 @@ class User extends Authenticatable
     protected $attributes = [
         'role' => 'user'
     ];
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'user_id', 'user_id');
+    }
+
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'course_details', 'user_id', 'course_id');
+    }
 }

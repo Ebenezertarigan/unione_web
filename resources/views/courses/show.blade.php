@@ -4,32 +4,41 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Video Page</title>
+    <title>Header</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="bg-black text-white">
     <!-- Back Button -->
-    <header class="p-4 bg-black flex items-center">
-        <a
-            href="{{ route('courses.index') }}"
-            class="flex items-center text-lg font-semibold text-white hover:underline">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2">
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15 19l-7-7 7-7" />
+    <header class="p-4 bg-black flex items-center justify-between">
+        <a href="{{ route('courses.index') }}" 
+           class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition duration-150 ease-in-out">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="h-5 w-5 mr-2" 
+                 fill="none" 
+                 viewBox="0 0 24 24" 
+                 stroke="currentColor">
+                <path stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      stroke-width="2" 
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back
+            Back to Course List
         </a>
+
+        <form action="{{ route('course-details.store') }}" method="POST" class="inline">
+            @csrf
+            <input type="hidden" name="course_id" value="{{ $course->course_id }}">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                Enroll in Course
+            </button>
+        </form>
     </header>
+    ?>
 
     <!-- Main Container -->
     <div class="container mx-auto flex flex-col md:flex-row mt-4 px-4">
@@ -247,6 +256,22 @@
             </div>
         </div>
     </div>
-</body>
 
+    <!-- Move success/error messages below header -->
+    @if(session('success'))
+        <div class="container mx-auto mt-4">
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="container mx-auto mt-4">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
+                {{ $errors->first() }}
+            </div>
+        </div>
+    @endif
+</body>
 </html>

@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void
-    {Schema::create('users', function (Blueprint $table) {
+    {
+        Schema::create('users', function (Blueprint $table) {
             $table->id('user_id');
             $table->string('name');
             $table->string('email')->unique();
@@ -15,20 +16,23 @@ return new class extends Migration {
             $table->string('foto')->nullable();
             $table->timestamps();
         });
-      
 
-        // courses
+        // courses - added user_id and thumbnail
         Schema::create('courses', function (Blueprint $table) {
             $table->id('course_id');
             $table->string('title');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->text('description');
             $table->string('video')->nullable();
+            $table->string('thumbnail')->nullable(); // Added thumbnail field
             $table->string('category')->nullable();
+            $table->unsignedBigInteger('user_id'); // Added user_id for instructor
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
 
-        // course_details
+        // course_details - added unique constraint
         Schema::create('course_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -39,6 +43,7 @@ return new class extends Migration {
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade');
+            $table->unique(['user_id', 'course_id']); // Prevent duplicate enrollments
         });
 
         // jobs
@@ -92,7 +97,9 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('community_id');
-            $table->timestamp('joined_at')->useCurrent();
+            $table->string('title');
+            $table->text('content');
+            $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreign('community_id')->references('community_id')->on('community')->onDelete('cascade');

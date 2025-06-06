@@ -9,8 +9,7 @@ use App\Http\Controllers\Controller;
 
 class RegisterController extends Controller
 {
-
-    public function showRegisterForm()
+    public function showRegistrationForm()  // Changed from showRegisterForm
     {
         return view('auth.registerview');
     }
@@ -32,7 +31,8 @@ class RegisterController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('auth.login')->with('success', 'Registrasi berhasil, Anda telah masuk.');
+        return redirect()->route('home')  // Changed to redirect to home after registration
+                       ->with('success', 'Registrasi berhasil!');
     }
 
     public function logout(Request $request)
