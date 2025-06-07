@@ -11,11 +11,13 @@ return new class extends Migration {
             $table->id('user_id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'user', 'instructor'])->default('user');
-            $table->string('foto')->nullable();
+            $table->enum('role', ['admin', 'user', 'employers'])->default('user');
             $table->timestamps();
         });
+
+
 
         // courses - added user_id and thumbnail
         Schema::create('courses', function (Blueprint $table) {
@@ -108,6 +110,7 @@ return new class extends Migration {
 
     public function down(): void
     {
+        Schema::dropIfExists('experiences');
         Schema::dropIfExists('community_posts');
         Schema::dropIfExists('community_users');
         Schema::dropIfExists('community');

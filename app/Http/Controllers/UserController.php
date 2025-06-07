@@ -1,23 +1,13 @@
 <?php
-Project\unioneWeb\app\Http\Controllers\UserController.php
-<?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function profile()
-    {
-        $user = Auth::user();
-        $enrolledCourses = $user->enrolledCourses()->latest()->take(3)->get();
-        return view('profile.index', compact('user', 'enrolledCourses'));
-    }
-
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -29,13 +19,20 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
+            // Delete old avatar if exists
+            if ($user->avatar) {
+                Storage::delete('public/photos/profiles/' . $user->avatar);
+            }
+            
             $foto = $request->file('foto');
             $filename = 'profile_'.time().'.'.$foto->getClientOriginalExtension();
-            $foto->move(public_path('photos/profiles'), $filename);
-            $user->foto = $filename;
+            $foto->storeAs('public/photos/profiles', $filename);
+            $user->avatar = $filename;
         }
 
-        $user->update($validated);
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->save;
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully!');
     }

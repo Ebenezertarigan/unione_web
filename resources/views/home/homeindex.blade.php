@@ -73,9 +73,9 @@
                     class="flex items-center space-x-2 text-sm text-white focus:outline-none px-3 py-2 bg-ghost rounded-md"
                     id="user-menu-button">
                     <img class="w-8 h-8 rounded-full object-cover object-center"
-                        src="https://plus.unsplash.com/premium_photo-1689977968861-9c91dbb16049?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        alt="User Photo">
-                    <span class="hidden sm:block text-sm">Andreas kalista</span>
+                        src="{{ Auth::user()->foto ? asset('photos/profiles/'.Auth::user()->foto) : asset('images/default-avatar.png') }}"
+                        alt="{{ Auth::user()->name }}">
+                    <span class="hidden sm:block text-sm">{{ Auth::user()->name }}</span>
                 </button>
 
                 <!-- Dropdown Menu -->
@@ -83,8 +83,12 @@
                     class="absolute right-0 hidden w-40 text-sm list-none bg-white divide-y divide-gray-200 rounded-lg shadow"
                     style="top: 40px;">
                     <div class="px-3 py-2">
-                        <a href="profileawal.html" class="block text-sm text-black">Andreas kalista</a>
-                        <a class="block text-xs text-gray-500 truncate">name@flowbite.com</a>
+                        <a href="{{ route('profile.show') }}" class="block text-sm text-gray-900 hover:text-blue-600">
+                            {{ Auth::user()->name }}
+                        </a>
+                        <a class="block text-xs text-gray-500 truncate">
+                            {{ Auth::user()->email }}
+                        </a>
                     </div>
                     <ul class="py-1">
                         <li>
@@ -185,14 +189,7 @@
         </div>
     </main>
 
-    <style>
-        .nav-link {
-            @apply flex flex-col items-center text-gray-500 hover:text-black;
-        }
-        .dropdown-item {
-            @apply flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full;
-        }
-    </style>
+
 
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>
