@@ -1,11 +1,21 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;    
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CourseDetailController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
+
+use App\Http\Controllers\PostLikeController;
+
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post}/like', [PostController::class, 'toggle'])->name('posts.toggleLike')->middleware('auth');
+});
+
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
 // Public routes
 Route::get('/', function () {
@@ -32,9 +42,7 @@ Route::middleware('guest')->group(function () {
 // Protected routes
 Route::middleware(['auth'])->group(function () {
     // Home route after login - updated to use homeindex view
-    Route::get('/home', function () {
-        return view('home.homeindex');
-    })->name('home');
+Route::get('/home', [PostController::class, 'index'])->name('home');
 
     // Profile routes
     Route::prefix('profile')->name('profile.')->group(function () {
@@ -96,5 +104,21 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/course-details/{id}', [CourseDetailController::class, 'update'])->name('course-details.update');
     Route::delete('/course-details/{id}', [CourseDetailController::class, 'destroy'])->name('course-details.destroy');
     
+    // Post routes
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::get('/posts', [PostController::class, 'index'])->name('home.homeindex');
+});
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->name('posts.comment');
+    Route::delete('/posts/{post}/comment/{comment}', [PostController::class, 'deleteComment'])->name('posts.comment.delete');
+    Route::get('/posts/{post}/comments', [PostController::class, 'showComments'])->name('posts.comments.show');
+
+    
 });

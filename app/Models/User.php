@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
-
+use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The primary key associated with the table.
@@ -54,4 +54,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class, 'user_id', 'user_id');
     }
+    public function posts() {
+    return $this->hasMany(Post::class, 'user_id', 'user_id');
+}
+
+public function comments() {
+    return $this->hasMany(Comment::class, 'user_id', 'user_id');
+}
+
+public function likedPosts() {
+    return $this->belongsToMany(Post::class, 'likes', 'user_id', 'post_id');
+}
 }

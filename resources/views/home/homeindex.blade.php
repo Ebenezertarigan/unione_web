@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Unione - Professional Learning Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 
 <body class="bg-[#F3F2EF]">
-        <!-- Header -->
+    <!-- Header -->
     <header>
         <nav class="fixed top-0 w-full z-50 flex items-center justify-between p-2 bg-black">
             <!-- Logo -->
@@ -42,8 +43,6 @@
                         class="text-white relative group hover:text-gray-500 border-b-2 border-transparent group-active:border-b-2 group-active:border-white"
                         id="job">
                         Job
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
                     </a>
                 </li>
                 <li>
@@ -51,8 +50,6 @@
                         class="text-white relative group hover:text-gray-500 border-b-2 border-transparent group-active:border-b-2 group-active:border-white"
                         id="community">
                         Community
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
                     </a>
                 </li>
                 <li>
@@ -60,8 +57,6 @@
                         class="text-white relative group hover:text-gray-500 border-b-2 border-transparent group-active:border-b-2 group-active:border-white"
                         id="news">
                         News
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
                     </a>
                 </li>
             </ul>
@@ -97,14 +92,14 @@
                             </a>
                         </li>
                         <li>
-                        <li>
-                            <a href="connection.html" class="block px-3 py-1 text-xs tect-black hover:bg-gray-200">
+                            <a href="connection.html" class="block px-3 py-1 text-xs text-black hover:bg-gray-200">
                                 <i class="ri-team-line mr-2"></i>Connection
                             </a>
                         </li>
-                        <a href="setting.html" class="block px-3 py-1 text-xs text-black hover:bg-gray-200">
-                            <i class="ri-settings-3-line mr-2"></i>Settings
-                        </a>
+                        <li>
+                            <a href="setting.html" class="block px-3 py-1 text-xs text-black hover:bg-gray-200">
+                                <i class="ri-settings-3-line mr-2"></i>Settings
+                            </a>
                         </li>
                         <li>
                             <a href="FAQ.html" class="block px-3 py-1 text-xs text-black hover:bg-gray-200">
@@ -117,7 +112,12 @@
                             </a>
                         </li>
                         <li>
-                            <a href="index.html" class="block px-3 py-1 text-xs text-black hover:bg-gray-200">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                @csrf
+                            </form>
+
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                class="block px-3 py-1 text-xs text-black hover:bg-gray-200">
                                 <i class="ri-logout-box-line mr-2"></i>Sign out
                             </a>
                         </li>
@@ -126,7 +126,8 @@
             </div>
         </nav>
     </header>
-    <!-- Script -->
+
+    <!-- Script for dropdown -->
     <script>
         const userMenuButton = document.getElementById('user-menu-button');
         const userDropdown = document.getElementById('user-dropdown');
@@ -144,53 +145,155 @@
         });
     </script>
 
+    <!-- Main content -->
+    <main class="pt-20 max-w-7xl mx-auto px-4 mt-1">
 
-    <!-- Navbar End -->
-    <!-- Main Content -->
-    <main class="pt-16 bg-[#F3F2EF]">
-        <div class="max-w-7xl mx-auto px-4 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Left Sidebar - Profile Card -->
-                <div class="md:col-span-1">
-                    <div class="bg-white rounded-lg shadow">
-                        <div class="h-20 bg-blue-600 rounded-t-lg"></div>
-                        <div class="px-4 pb-4">
-                            <div class="-mt-10 mb-4">
-                                <img src="{{ Auth::user()->foto ? asset('photos/profiles/'.Auth::user()->foto) : asset('images/default-avatar.png') }}"
-                                     class="w-20 h-20 rounded-full border-4 border-white object-cover mx-auto" 
-                                     alt="{{ Auth::user()->name }}">
-                            </div>
-                            <h2 class="text-xl font-bold text-center mb-1">{{ Auth::user()->name }}</h2>
-                            <p class="text-gray-600 text-sm text-center">{{ Auth::user()->role }}</p>
+        <!-- Create Post Button -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex items-center space-x-4">
+                <!-- Foto Profil -->
+                <img src="{{ Auth::user()->foto ? asset('photos/profiles/' . Auth::user()->foto) : asset('images/default-avatar.png') }}"
+                    class="w-10 h-10 rounded-full object-cover" alt="{{ Auth::user()->name }}">
+
+                <!-- Tombol Start Post -->
+                <a href="{{ route('posts.create') }}"
+                    class="flex-grow bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-full transition text-sm">
+                    Tambah post Anda
+                </a>
+
+                <!-- Icon opsional -->
+                <a href="{{ route('posts.create') }}"
+                    class="text-gray-400 hover:text-gray-600 transition text-xl">
+                    <i class="ri-add-line"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Posts Feed -->
+        <div class="space-y-6">
+            @foreach ($posts as $post)
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <img src="{{ $post->user->foto ? asset('photos/profiles/'.$post->user->foto) : asset('images/default-avatar.png') }}"
+                            class="w-10 h-10 rounded-full object-cover" alt="{{ $post->user->name }}" />
+                        <div>
+                            <h3 class="font-semibold">{{ $post->user->name }}</h3>
+                            <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
-                </div>
-
-                <!-- Main Feed -->
-                <div class="md:col-span-2">
-                    <!-- Course Recommendations -->
-                    <div class="bg-white rounded-lg shadow p-6 mb-6">
-                        <h2 class="text-xl font-bold mb-4">Recommended Courses</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            @foreach($recommendedCourses ?? [] as $course)
-                            <div class="border rounded-lg p-4">
-                                <h3 class="font-semibold">{{ $course->title }}</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $course->description }}</p>
-                                <a href="{{ route('courses.show', $course->course_id) }}" 
-                                   class="text-blue-600 text-sm font-semibold mt-2 inline-block">
-                                    Learn More
-                                </a>
-                            </div>
-                            @endforeach
+                    @if ($post->user_id === Auth::id())
+                    <div class="relative">
+                        <button onclick="toggleDropdown('post-{{ $post->id }}-dropdown')" class="text-gray-400 hover:text-gray-600">
+                            <i class="ri-more-2-fill"></i>
+                        </button>
+                        <div id="post-{{ $post->id }}-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded shadow-lg z-50">
+                            <a href="{{ route('posts.edit', $post->id) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                Edit
+                            </a>
+                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Are you sure to delete this post?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Delete</button>
+                            </form>
                         </div>
                     </div>
+                    @endif
                 </div>
+
+                <p class="mt-4 text-gray-700 whitespace-pre-wrap">{{ $post->content }}</p>
+
+                @if ($post->image)
+                <img src="{{ asset('storage/posts/' . $post->image) }}" alt="Post image" class="mt-4 rounded-lg max-h-96 w-full object-cover" />
+                @endif
+
+                <div class="flex space-x-4 mt-4 pt-4 border-t text-gray-500">
+                    <button
+                        class="like-btn flex items-center space-x-1 cursor-pointer 
+      {{ optional($post->likedByUsers)->contains(Auth::id()) ? 'text-blue-600' : 'text-gray-400' }}"
+                        data-post-id="{{ $post->id }}">
+                        <i class="ri-thumb-up-line"></i>
+                        <span class="likes-count">{{ $post->likes->count() }}</span>
+                    </button>
+                </div>
+                <!-- Comments Section -->
+                <div class="mt-4 border-t pt-4 space-y-3">
+                    @foreach ($post->comments as $comment)
+                    <div class="flex space-x-3">
+                        <img src="{{ $comment->user->foto ? asset('photos/profiles/'.$comment->user->foto) : asset('images/default-avatar.png') }}"
+                            class="w-8 h-8 rounded-full object-cover" alt="{{ $comment->user->name }}">
+                        <div>
+                            <p class="text-sm"><strong>{{ $comment->user->name }}</strong></p>
+                            <p class="text-gray-700 text-sm">{{ $comment->content }}</p>
+                            <p class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+
+                    <!-- Form Add Comment -->
+                    <form action="{{ route('comments.store') }}" method="POST" class="mt-3 flex space-x-2">
+                        @csrf
+                        <input type="hidden" name="post_id" value="{{ $post->id }}">
+                        <input type="text" name="content" placeholder="Add a comment..." required
+                            class="flex-grow border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition text-sm">
+                            Send
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+
+            <!-- Pagination -->
+            <div class="mt-6">
+                {{ $posts->links() }}
             </div>
         </div>
     </main>
 
+    <!-- Like Button Script -->
+    <script>
+        document.querySelectorAll('.like-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                const likesCountSpan = this.querySelector('.likes-count');
+                const token = '{{ csrf_token() }}';
 
+                fetch(`/posts/${postId}/like`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.liked) {
+                            this.classList.add('text-blue-600');
+                            this.classList.remove('text-gray-400');
+                        } else {
+                            this.classList.add('text-gray-400');
+                            this.classList.remove('text-blue-600');
+                        }
+                        likesCountSpan.textContent = data.likesCount;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
 
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+        // Toggle dropdown for post actions
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
+
 </html>
