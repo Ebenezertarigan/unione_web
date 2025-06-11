@@ -17,6 +17,9 @@ class CourseResource extends JsonResource
             'category' => $this->category,
             'status' => $this->status,
             'video' => $this->video,
+            'thumbnail' => $this->thumbnail,
+            'category' => $this->category,
+            'user_id' => $this->user_id,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

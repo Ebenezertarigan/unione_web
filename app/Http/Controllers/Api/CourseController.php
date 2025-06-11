@@ -30,8 +30,7 @@ class CourseController extends Controller
                 'description' => 'required|string',
                 'category' => 'nullable|string|max:100',
                 'status' => 'nullable|in:active,inactive',
-                'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg|max:102400',
-                'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg|max:102400', // 100MB max
                 'user_id' => 'required|exists:users,user_id'
             ]);
 
@@ -40,6 +39,7 @@ class CourseController extends Controller
                 'description' => trim($validated['description'], '"'), 
                 'category' => $validated['category'] ? trim($validated['category'], '"') : null,
                 'status' => $validated['status'] ?? 'active',
+                'user_id' => $validated['user_id'], // <-- tambahkan ini
             ];
 
             if ($request->hasFile('video')) {
