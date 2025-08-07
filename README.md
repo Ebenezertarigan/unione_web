@@ -1,8 +1,9 @@
 # 🌐 Unione
 
-**Unione** adalah aplikasi media sosial yang dirancang untuk:
+**Unione** adalah aplikasi media lowongan pekerjan yang dirancang untuk:
 
-- Membagikan profil pengguna 👤  
+- Membagikan profil pengguna 👤
+- Melamar dan membuat pekerjaan
 - Menyalurkan referensi pekerjaan atau pembelajaran 🔗  
 - Menyediakan forum diskusi 💬  
 - Memberikan ruang untuk berbagi keterampilan dan pengalaman 🛠️  
@@ -14,16 +15,13 @@ Aplikasi ini membantu pengguna untuk berinteraksi dan berkolaborasi, serta mempe
 
 ## ✨ Fitur Utama
 
-🚧 **Saat ini masih dalam tahap pengembangan (Under Maintenance)**  
-Beberapa fitur yang akan hadir di antaranya:
-
 - Sistem autentikasi pengguna (register & login)
 - Profil pengguna dengan portofolio
 - Forum komunitas & diskusi topik
 - Posting dan komentar
 - Sistem komunitas: buat, gabung, keluar
-- Rekomendasi relasi dan konten
-
+- 
+🚧 **Beberapa fitur saat ini masih dalam tahap pengembangan (Under Maintenance)**  
 ---
 
 ## 🛠️ Instalasi dan Setup
