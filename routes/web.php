@@ -41,7 +41,7 @@ Route::middleware('guest')->group(function () {
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
-    // Home route after login - updated to use homeindex view
+    // Home route after login
 Route::get('/home', [PostController::class, 'index'])->name('home');
 
     // Profile routes
@@ -91,7 +91,7 @@ Route::get('/home', [PostController::class, 'index'])->name('home');
         Route::put('/update-about', [ProfileController::class, 'updateAbout'])->name('update-about');
     });
     
-    // Course routes with explicit course_id parameter
+    // Course routes with  course_id 
     Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
     Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
     Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
